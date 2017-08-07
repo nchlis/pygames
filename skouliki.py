@@ -1,85 +1,33 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Aug  6 21:03:18 2017
+Created on Mon Aug  7 16:14:21 2017
 
-@author: nikos
+@author: N.Chlis
 """
 
 import pygame
-import matplotlib as mpl
 import sys
-import time
+import numpy as np
+import matplotlib as mpl
 
-#scale matplotlib colormap back to 0-255 range
-def mpl2rgb(cmap):
-    return((cmap[0]*255,cmap[1]*255,cmap[2]*255,cmap[3]*255))
-
-cmap = mpl.cm.Dark2
-pygame.mixer.pre_init(44100, 16, 2, 4096)
-pygame.init()
-pygame.mixer.init
+MUSIC = False
 FPS=60
-CLOCK = pygame.time.Clock()
-#%% moving box that changes color
-
-DISPLAY = pygame.display.set_mode((400, 300))
-pygame.display.set_caption('Welcome to game0!')
-is_blue = True
-x = 30
-y = 30
-while True:
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        pygame.quit()
-                        #sys.exit()
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                        is_blue = not is_blue
-        
-        pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]: y -= 3
-        if pressed[pygame.K_DOWN]: y += 3
-        if pressed[pygame.K_LEFT]: x -= 3
-        if pressed[pygame.K_RIGHT]: x += 3
-        
-        DISPLAY.fill((0, 0, 0))
-        #if is_blue: color = (0, 128, 255)
-        if is_blue: color = (0, 128, 255)
-        else: color = mpl2rgb(cmap(0))
-        #else: color = (255, 100, 0)
-        pygame.draw.rect(DISPLAY, color, pygame.Rect(x, y, 60, 60))
-        
-        pygame.display.update()
-        CLOCK.tick(FPS)
-print('Done!')
-#pygame.display.quit()
-#pygame.quit()#this is necessary for the window to close when pressing (x)
-        
-#%% moving ball
-#pygame.mixer.pre_init(44100, 16, 2, 4096)
-
-#initialize pygame
-pygame.init()
-#pygame.mixer.init()
-
-MUSIC = True
-FPS=60
-CLOCK = pygame.time.Clock()
+#CLOCK = pygame.time.Clock()
 BLACK = (0, 0, 0, 255)
 WHITE = (255, 255, 255, 255)
 RED = (255, 0, 0, 255)
 GREEN = (0, 255, 0, 255)
 BLUE = (0, 0, 255, 255)
-BACKGROUND = WHITE
 XLIM = 400
 YLIM = 300
-DISPLAY = pygame.display.set_mode((XLIM, YLIM))
-DISPLAY.fill(BACKGROUND)
-FONT = pygame.font.Font('freesansbold.ttf', 32)#font to write text, 32 textsize
-pygame.display.set_caption('Welcome to game0!')
+#DISPLAY = pygame.display.set_mode((XLIM, YLIM))
+#BACKGROUND = WHITE
+#DISPLAY.fill(BACKGROUND)
+#FONT = pygame.font.Font('freesansbold.ttf', 32)#font to write text, 32 textsize
+#pygame.display.set_caption('skouliki_v0.1!')
 x = 30
 y = 30
-ballImg = pygame.image.load('ball.png').convert()
+#ballImg = pygame.image.load('ball.png').convert()
 pressed_space = False
 
 #play background music
@@ -87,6 +35,53 @@ if MUSIC==True:#play background music
     pygame.mixer.music.load('project0.wav')
     pygame.mixer.music.play(-1, 0.0)#loop indefinitely, starting track from 0.0s
 
+#scale matplotlib colormap back to 0-255 range
+def mpl2rgb(cmap):
+    return((cmap[0]*255,cmap[1]*255,cmap[2]*255,cmap[3]*255))
+
+BACKGROUND = BLACK
+
+def main():
+    global CLOCK, DISPLAY, FONT    
+    #initialize pygame
+    pygame.init()
+    CLOCK = pygame.time.Clock()
+    DISPLAY = pygame.display.set_mode((XLIM, YLIM))
+    DISPLAY.fill(BACKGROUND)
+    FONT = pygame.font.Font('freesansbold.ttf', 32)#font to write text, 32 textsize
+    pygame.display.set_caption('skouliki_v0.1!')
+    
+    welcome_screen()
+    print('play!')
+    play_game()
+    
+    #exit the game
+    pygame.quit()
+    #sys.exit()
+    return None
+
+def welcome_screen():
+    while True:
+        textSurface = FONT.render('Hit Enter to start',True,
+                                  mpl2rgb(mpl.cm.Accent(0)), BACKGROUND)
+        textRect = textSurface.get_rect()
+        textRect.center = (XLIM/2, YLIM/2)#at the center of the screen
+        DISPLAY.blit(textSurface, textRect)
+        pygame.display.update()
+        CLOCK.tick(FPS)
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    #sys.exit()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    return                
+
+def play_game():
+    return
+
+main()
+#%%
+    
 while True:
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -131,32 +126,3 @@ while True:
         pygame.display.update()
         CLOCK.tick(FPS)
 print('Done!')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
