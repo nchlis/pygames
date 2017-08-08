@@ -8,7 +8,7 @@ Created on Mon Aug  7 16:14:21 2017
 import pygame
 import sys
 import random
-import numpy as np
+#import numpy as np
 #import matplotlib as mpl
 import time
 
@@ -62,13 +62,14 @@ def draw_square(surface, color, pos):
 BACKGROUND = BLACK
 
 def main():
-    global CLOCK, DISPLAY, FONT    
+    global CLOCK, DISPLAY, FONT, FONTsmall
     #initialize pygame
     pygame.init()
     CLOCK = pygame.time.Clock()
     DISPLAY = pygame.display.set_mode((XLIM, YLIM))
     DISPLAY.fill(BACKGROUND)
     FONT = pygame.font.Font('freesansbold.ttf', 32)#font to write text, 32 textsize
+    FONTsmall = pygame.font.Font('freesansbold.ttf', 16)#font to write text, 32 textsize
     pygame.display.set_caption('skouliki_v0.1!')
     
     welcome_screen()
@@ -78,7 +79,7 @@ def main():
     #exit the game
     time.sleep(2)#wait for 2 seconds
     pygame.quit()
-    #sys.exit()
+    sys.exit()
     return None
 
 def welcome_screen():
@@ -93,7 +94,7 @@ def welcome_screen():
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    #sys.exit()
+                    sys.exit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     return                
 
@@ -137,6 +138,12 @@ def play_game():
         
         if pause == False:
             DISPLAY.fill(BACKGROUND)
+            #print('Score:',score)
+            textSurface = FONTsmall.render('Score: '+str(score),True,
+                                  LIGHTGREEN, BACKGROUND)
+            textRect = textSurface.get_rect()
+            textRect.topright = (XLIM-20, 10)#at the center of the screen
+            DISPLAY.blit(textSurface, textRect)
             worm.direction = new_direction
             worm.move()
             if(worm.collision == True): return score#go to game over screen
