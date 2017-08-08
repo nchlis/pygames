@@ -269,10 +269,10 @@ class Apple:
         if worm != None:
             x=random.randint(1,GRIDX-2)*GRIDSIZE
             while x in worm.xcoords:
-                x=random.randint(0,GRIDX-2)*GRIDSIZE
+                x=random.randint(1,GRIDX-2)*GRIDSIZE
             y=random.randint(1,GRIDY-2)*GRIDSIZE
             while y in worm.ycoords:
-                y=random.randint(0,GRIDY-2)*GRIDSIZE
+                y=random.randint(1,GRIDY-2)*GRIDSIZE
             self._location = (x,y)
         else:
             x=random.randint(1,GRIDX-2)*GRIDSIZE
