@@ -74,10 +74,12 @@ def main():
     
     welcome_screen()
     print('play!')
-    score = play_game()
-    game_over(score)
+    play=True
+    while(play):
+        score = play_game()
+        play=game_over(score)
     #exit the game
-    time.sleep(2)#wait for 2 seconds
+    #time.sleep(2)#wait for 2 seconds
     pygame.quit()
     sys.exit()
     return None
@@ -99,16 +101,34 @@ def welcome_screen():
                     return                
 
 def game_over(score):
+    DISPLAY.fill(BACKGROUND)
     print('Game Over. Score:',score)
     textSurface = FONT.render('Game Over. Score: '+str(score),True,
                                   LIGHTGREEN, BACKGROUND)
     textRect = textSurface.get_rect()
     textRect.center = (XLIM/2, YLIM/2)#at the center of the screen
     DISPLAY.blit(textSurface, textRect)
+    print('Play again? (y/n)')
+    textSurface = FONT.render('Play again? (y/n)',True,
+                                  LIGHTGREEN, BACKGROUND)
+    textRect = textSurface.get_rect()
+    textRect.center = (XLIM/2, 2.5*YLIM/4)#at the center of the screen
+    DISPLAY.blit(textSurface, textRect)
     if SOUND == True:
         soundObj = pygame.mixer.Sound('explosion.wav')
         soundObj.play()
     pygame.display.update()
+    while True:
+        for event in pygame.event.get(): # event handling loop
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    return True
+                elif event.key == pygame.K_n:
+                    return False
+
 
 def play_game():
     pause = False
@@ -121,7 +141,7 @@ def play_game():
         for event in pygame.event.get(): # event handling loop
             if event.type == pygame.QUIT:
                 pygame.quit()
-                #sys.exit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     new_direction = LEFT
@@ -202,6 +222,10 @@ class Worm:
             self._direction = new_direction
     
     @property
+    def location(self):
+        return self._location
+    
+    @property
     def xcoords(self):
         c = []
         for l in self._location:
@@ -212,7 +236,7 @@ class Worm:
     def ycoords(self):
         c = []
         for l in self._location:
-            c.append(l[0])
+            c.append(l[1])
         return c
     
     @property
@@ -241,6 +265,7 @@ class Worm:
         #update the position
         self._location.insert(0,(x_new,y_new))
         self._location.pop()
+        #print('worm at',self.head)
     
     def print_location(self):
         print('Worms\'s location:',self._location)
@@ -268,16 +293,16 @@ class Apple:
         #especially later in the game when the worm speeds up
         if worm != None:
             x=random.randint(1,GRIDX-2)*GRIDSIZE
-            while x in worm.xcoords:
-                x=random.randint(1,GRIDX-2)*GRIDSIZE
             y=random.randint(1,GRIDY-2)*GRIDSIZE
-            while y in worm.ycoords:
+            while (x ,y) in worm.location:
+                x=random.randint(1,GRIDX-2)*GRIDSIZE
                 y=random.randint(1,GRIDY-2)*GRIDSIZE
             self._location = (x,y)
         else:
             x=random.randint(1,GRIDX-2)*GRIDSIZE
             y=random.randint(1,GRIDY-2)*GRIDSIZE
-            self._location = (x,y) 
+            self._location = (x,y)
+        #print('apple at',self._location)
     
     def print_location(self):
         print('Apple\'s location:',self.location)
